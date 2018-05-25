@@ -56,6 +56,10 @@ class BasicThree {
     onWindowResize() {
         this.getRect(this.appDom);
         this.camera.aspect = this.rect.width / this.rect.height;
+        // this.camera.left = this.rect.width / -2;
+        // this.camera.right = this.rect.width / 2;
+        // this.camera.top = this.rect.height / 2;
+        // this.camera.bottom = this.rect.height / -2;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.rect.width, this.rect.height);
     }
@@ -64,6 +68,7 @@ class BasicThree {
     }
     initCamera() {
         this.camera = new THREE.PerspectiveCamera(45, this.rect.width / this.rect.height, 1, 1000);
+        // this.camera = new THREE.OrthographicCamera( this.rect.width / - 2, this.rect.width / 2, this.rect.height / 2, this.rect.height / - 2, 1, 1000 );
         this.camera.position.set(0, 0, 10);
         this.camera.lookAt(new THREE.Vector3());
     }

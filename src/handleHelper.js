@@ -14,6 +14,7 @@ var _size = 0.15,
 const geoArrow = new THREE.CylinderGeometry(0, 0.04, 0.2, 12);
 const geoLine = new THREE.CylinderGeometry(0.01, 0.01, 1.4);
 const geoPlane = new THREE.PlaneGeometry(0.6, 0.6);
+const geoRing = new THREE.RingGeometry(0.6, 1, 16);
 
 //material
 const matRed = new THREE.MeshBasicMaterial({
@@ -75,18 +76,20 @@ class HandleHelper {
         this.axisY = new THREE.Object3D();
         this.axisZ = new THREE.Object3D();
         this.planeXY = new THREE.Object3D();
-        this.planeXZ = new THREE.Object3D();
+        this.planeZX = new THREE.Object3D();
         this.planeYZ = new THREE.Object3D();
         this.center = new THREE.Object3D();
+        this.ring = new THREE.Object3D();
 
         this.initAxisHelper();
         this.initPlaneHelper();
         this.initCenterHelper();
-
-        this.setAttr();
-
-        this.helper.add(this.axisX, this.axisY, this.axisZ, this.planeXY, this.planeXZ, this.planeYZ, this.center);
+        this.initRingHelper();
+        
+        this.helper.add(this.axisX, this.axisY, this.axisZ, this.planeXY, this.planeZX, this.planeYZ, this.center, this.ring);
         this.wrap.add(this.helper);
+        
+        this.setAttr();
 
         _scene.add(this.wrap);
 
@@ -95,8 +98,25 @@ class HandleHelper {
     }
     setAttr() {
         this.wrap.setAll({
-            name:"handleHelper"
+            name:"wrap"
         });
+        this.helper.name = "helper";
+    }
+    initRingHelper() {
+        let ring = new THREE.Mesh(
+            new THREE.RingGeometry(0.7, 1, 30, 1, 0, PI * 2),
+            new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                vertexColors: THREE.FaceColors
+            })
+        );
+        for(let i = 0; i < ring.geometry.faces.length; i++) {
+            var color = Math.random() * 0xffffff;
+            ring.geometry.faces[i].color.set(color);
+        }
+        ring.rotation.set(-PI/2, 0, 0);
+        ring.rotateAxis = "y";
+        this.ring.add(ring);
     }
     initAxisHelper() {
         
@@ -110,6 +130,8 @@ class HandleHelper {
             matRed
         );
         lineX.position.set(0, 0.7, 0);
+        arrowX.axis = "x";
+        lineX.axis = "x";
         this.axisX.add(arrowX, lineX);
         this.axisX.rotation.set(0, 0, -PI/2);
 
@@ -123,6 +145,8 @@ class HandleHelper {
             matGreen
         );
         lineY.position.set(0, 0.7, 0);
+        arrowY.axis = "y";
+        lineY.axis = "y";
         this.axisY.add(arrowY, lineY);
 
         let arrowZ = new THREE.Mesh(
@@ -135,11 +159,10 @@ class HandleHelper {
             matBlue
         );
         lineZ.position.set(0, 0.7, 0);
+        arrowZ.axis = "z";
+        lineZ.axis = "z";
         this.axisZ.add(arrowZ, lineZ);
         this.axisZ.rotation.set(PI/2, 0, 0);
-
-        
-
     }
     initPlaneHelper() {
         let planeXY = new THREE.Mesh(
@@ -147,15 +170,8 @@ class HandleHelper {
             matRG
         );
         planeXY.position.set(0.3, 0.3, 0);
+        planeXY.plane = "xy";
         this.planeXY.add(planeXY);
-
-        let planeXZ = new THREE.Mesh(
-            geoPlane,
-            matRB
-        );
-        planeXZ.position.set(0.3, 0, 0.3);
-        planeXZ.rotation.set(-PI/2, 0, 0);
-        this.planeXZ.add(planeXZ);
 
         let planeYZ = new THREE.Mesh(
             geoPlane,
@@ -163,7 +179,17 @@ class HandleHelper {
         );
         planeYZ.position.set(0, 0.3, 0.3);
         planeYZ.rotation.set(0, PI/2, 0);
+        planeYZ.plane = "yz";
         this.planeYZ.add(planeYZ);
+
+        let planeZX = new THREE.Mesh(
+            geoPlane,
+            matRB
+        );
+        planeZX.position.set(0.3, 0, 0.3);
+        planeZX.rotation.set(-PI/2, 0, 0);
+        planeZX.plane = "zx";
+        this.planeZX.add(planeZX);
     }
     initCenterHelper(){
         let octahedron = new THREE.Mesh(

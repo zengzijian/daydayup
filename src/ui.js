@@ -8,8 +8,8 @@ class LeftArea extends React.Component {
     render() {
         return (
             <div className="leftArea">
-                <h2>LeftArea</h2>
-                <div className="row">
+                {/* <h2>LeftArea</h2> */}
+                {/* <div className="row">
                     <div className="objList">
                         <ul>   
                             <li>mesh1</li>
@@ -17,7 +17,7 @@ class LeftArea extends React.Component {
                             <li>mesh1</li>
                         </ul>
                     </div>
-                </div>
+                </div> */}
                 <div className="row">
                     <span>选中物体 ：</span>
                     <span id="selectedName">mesh1</span>
