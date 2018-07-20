@@ -33,7 +33,7 @@ var common = {
 	plugins: [
 		new CleanWebpackPlugin(['dist']),
 		new HtmlWebpackPlugin({
-			title: 'kaiTianFu'
+			title: 'day day up'
 		})
 	],
 	resolve:{
