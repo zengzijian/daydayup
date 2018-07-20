@@ -7,7 +7,7 @@ const merge = require('webpack-merge');
 
 var common = {
 	entry: {
-		index: './src/index.js'
+		index: './src/index.ts'
 	},
 	module: {
      	rules: [
@@ -17,42 +17,41 @@ var common = {
             	use: ['style-loader', 'css-loader']
         	},
         	{
-				test: /\.(png|svg|jpg|gif|obj|dae)$/,
+				test: /\.(png|svg|jpg|gif|obj|dae|sea)$/,
 				include: path.resolve(__dirname, "src"),
 				use: [
 					'file-loader'
 				]
-		},
+			},
 			{
-				test: /\.(js|jsx)$/,
-				use: {
-                    loader: "babel-loader"
-                },
-                exclude: /node_modules/
+				test: /\.tsx?$/,
+				loader: 'ts-loader',
+				exclude: /node_modules/
 			}
 		]
     },
 	plugins: [
 		new CleanWebpackPlugin(['dist']),
 		new HtmlWebpackPlugin({
-			title: 'Output Management'
+			title: 'kaiTianFu'
 		})
 	],
+	resolve:{
+		extensions:[".ts", ".js"]
+	}
 }
 
 var productionConfig = {
 	entry: {
 		vendor:[
 			'three',
-			'react',
-			'react-dom'
+			'pixi.js'
 		]
 	},
 	plugins: [
 		new UglifyJSPlugin({
 			// sourceMap: true
-		}),
-		new webpack.HashedModuleIdsPlugin() //vendor的hash变化需要修复，用于生产环境构建
+		})
 	],
 	optimization: {//代码分离
 	    splitChunks: {
@@ -77,7 +76,7 @@ var productionConfig = {
 	    }
 	},
 	output: {
-		filename: '[name].[chunkhash].js',
+		filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	}
 };
