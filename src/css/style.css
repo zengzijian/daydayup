@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #cccccc;
+}
+#mainArea {
+    width: 1280px;
+    height: 800px;
+}
+#area3d {
+    width: 50%;
+    height: 80%;
+    background-color: rgba(255, 0, 0, 0.3);
+    display: inline-block;
+    float: left;
+}
+#area2d {
+    width: 50%;
+    height: 80%;
+    background-color: rgba(0, 0, 255, 0.3);
+    display: inline-block;
+    float: left;
+}
+#dataBoard {
+    width:100%;
+    height: 20%;
+    display: inline-block;
+    background-color: rgba(0, 255, 0, 0.3);
+    float: left;
+}

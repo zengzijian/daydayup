@@ -1,8 +1,6 @@
-document.write("test");
+import "./css/style.css";
+import {createDom} from "./view/createDom";
+import {main3d} from "./3d/main3d";
 
-function test(n:number) {
-    return n * n;
-}
-
-console.log(test(2));
-console.log(test(3));
+createDom();
+main3d();
