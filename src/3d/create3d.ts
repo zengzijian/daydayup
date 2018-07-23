@@ -24,8 +24,8 @@ class create3d {
 
         this.loopFn = [];
 
-        var render = this.render.bind(this, arguments);
-        this.loopFn.push(render);
+        // var render = this.render.bind(this, arguments);
+        // this.loopFn.push(render);
 
         this.loop();
     }
@@ -70,6 +70,5 @@ class create3d {
         }
     }
 }
-
 
 export {create3d};
