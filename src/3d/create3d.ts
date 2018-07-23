@@ -24,9 +24,6 @@ class create3d {
 
         this.loopFn = [];
 
-        // var render = this.render.bind(this, arguments);
-        // this.loopFn.push(render);
-
         this.loop();
     }
 

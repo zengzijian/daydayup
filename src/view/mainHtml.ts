@@ -1,4 +1,3 @@
-import {Vector3} from "../model/vector3";
 import {Input} from "./input";
 
 function mainHtml() {

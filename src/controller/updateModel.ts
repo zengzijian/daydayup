@@ -15,7 +15,6 @@ function updateModel() {
         inputCurrentObjPox.setAttribute("value", String(val));
         console.log(val);
         app3d.render();
-
     }
     inputCurrentObjPox.oninput = function(e:any) {
         modelCurrentObj.position.x = Number(e.target.value);
