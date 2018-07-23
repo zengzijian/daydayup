@@ -1,6 +1,6 @@
-import {Vector3} from "./vector3";
+import {Vector3} from "./baseDataType";
 
-var modelCurrentObj = {
+let modelCurrentObj = {
     position: new Vector3()
 };
 

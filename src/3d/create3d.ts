@@ -11,9 +11,9 @@ class create3d {
     public loopFn: Array<Function>;
 
     constructor(params:any) {
-        var domId = params.domId !== undefined ? params.domId : "area3d";
-        var bgColor = params.bgColor !== undefined ? params.bgColor : 0xdddddd;
-        var bgAlpha = params.bgAlpha !== undefined ? params.bgAlpha : 1;
+        let domId = params.domId !== undefined ? params.domId : "area3d";
+        let bgColor = params.bgColor !== undefined ? params.bgColor : 0xdddddd;
+        let bgAlpha = params.bgAlpha !== undefined ? params.bgAlpha : 1;
         this.wrapDom = document.getElementById(domId);
 
         this.getRect();
@@ -32,8 +32,8 @@ class create3d {
     }
 
     private createCamera() {
-        var width = this.rect.width;
-        var height = this.rect.height;
+        let width = this.rect.width;
+        let height = this.rect.height;
         this.camera = new THREE.PerspectiveCamera(60, width/height,1, 1000);
         this.camera.position.set(0, 0, 10);
     }
@@ -57,7 +57,7 @@ class create3d {
         this.renderer.render(this.scene, this.camera);
     }
     private loop() {
-        var loop = this.loop.bind(this, arguments);
+        let loop = this.loop.bind(this, arguments);
         requestAnimationFrame(loop);
 
         if(this.loopFn.length > 0) {
