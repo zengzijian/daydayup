@@ -2,7 +2,6 @@ import {currentObj, app3d} from "../3d/main3d";
 import {modelCurrentObj} from "../model/modelCurrentObj";
 
 function updateModel() {
-    console.log(currentObj);
 
     for(let i = 0; i < 5; i++) {
         setTimeout(function(){
