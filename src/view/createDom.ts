@@ -1,5 +1,3 @@
-
-
 function createDom() {
 
     var baseDomId = "mainArea";
