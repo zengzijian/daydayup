@@ -4,3 +4,5 @@ import {main3d} from "./3d/main3d";
 
 createDom();
 main3d();
+
+console.log("test");
