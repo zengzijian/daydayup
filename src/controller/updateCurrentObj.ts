@@ -41,6 +41,9 @@ function updateCurrentObj() {
         modelCurrentObj.position.z = Number(e.target.value);
     }
 
+    console.log(modelCurrentObj);
+    console.log(modelCurrentObj.position);
+
 
 }
 
