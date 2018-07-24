@@ -11,6 +11,7 @@ function updateCurrentObj() {
         }, 1000 * i);
     }
 
+    // todo 目前只能重写一次xFn方法，若在多处添加更新view的操作，可以考虑将所有方法保存到数组中，在set方法中遍历数组执行所有方法
     let inputCurrentObjPosX = document.getElementById("input_posX");
     modelCurrentObj.position.xFn = function(val) {
         app3d.currentObj.position.x = val;
@@ -40,10 +41,6 @@ function updateCurrentObj() {
     inputCurrentObjPosZ.oninput = function(e:any) {
         modelCurrentObj.position.z = Number(e.target.value);
     }
-
-    console.log(modelCurrentObj);
-    console.log(modelCurrentObj.position);
-
 
 }
 
