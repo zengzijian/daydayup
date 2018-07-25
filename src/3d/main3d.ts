@@ -1,5 +1,5 @@
-import {create3d} from "./create3d";
 import * as THREE from "three";
+import {Create3d} from "./create3d";
 import {BaseObject} from "../model/baseObject";
 import {Vector3} from "../model/baseDataType";
 import {updateCurrentObj} from "../controller/updateCurrentObj";
@@ -13,9 +13,8 @@ let render:Function;
 let dataModel:any = {};
 
 function main3d() {
-    app3d = new create3d("area3d");
+    app3d = new Create3d("area3d");
     render = app3d.render;
-
     app3d.camera.position.set(0, 5, 20);
     // app3d.camera.lookAt(app3d.scene.position);
 

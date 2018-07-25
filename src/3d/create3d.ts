@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {OrbitControls} from "./OrbitControls";
 
-class create3d {
+class Create3d {
     public camera: THREE.Camera;
     public renderer: THREE.WebGLRenderer;
     public scene: THREE.Scene;
@@ -17,10 +17,10 @@ class create3d {
         this.wrapDom = document.getElementById(domId);
 
         this.getRect();
-        this.createCamera();
-        this.createScene();
-        this.createRenderer(bgColor, bgAlpha);
-        this.createControls();
+        this.initCamera();
+        this.initScene();
+        this.initRenderer(bgColor, bgAlpha);
+        this.initControls();
 
         this.loopFn = [];
 
@@ -31,16 +31,16 @@ class create3d {
         this.rect = this.wrapDom.getBoundingClientRect();
     }
 
-    private createCamera() {
+    private initCamera() {
         let width = this.rect.width;
         let height = this.rect.height;
         this.camera = new THREE.PerspectiveCamera(60, width/height,1, 1000);
         this.camera.position.set(0, 0, 10);
     }
-    private createScene() {
+    private initScene() {
         this.scene = new THREE.Scene();
     }
-    private createRenderer(color: number, alpha: number){
+    private initRenderer(color: number, alpha: number){
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true
@@ -50,7 +50,7 @@ class create3d {
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.wrapDom.appendChild(this.renderer.domElement);
     }
-    private createControls() {
+    private initControls() {
         this.controls = new OrbitControls(this.camera, this.wrapDom);
     }
     public render() {
@@ -68,4 +68,4 @@ class create3d {
     }
 }
 
-export {create3d};
+export {Create3d};
