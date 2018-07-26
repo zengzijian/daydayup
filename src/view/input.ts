@@ -5,7 +5,7 @@ class Input {
     constructor(name:string, id:string) {
         this.initDom(name, id);
     }
-    private initDom(name:string, id:string) {
+    private initDom = (name:string, id:string) => {
         this.dom = document.createElement("span");
         this.dom.id="wrap_" + id;
 

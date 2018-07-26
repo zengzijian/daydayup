@@ -12,7 +12,6 @@ class FirstPersonControls {
 
     private mouseDragOn: boolean;
     private moveDirection: any;
-    private mouse: THREE.Vector2;
     private rotateStart: THREE.Vector2;
     private rotateEnd: THREE.Vector2;
     private rotateDelta: THREE.Vector2;
@@ -49,7 +48,7 @@ class FirstPersonControls {
         this.addListener();
     }
 
-    private onMouseDown(e: any) {
+    private onMouseDown = (e: any) => {
         if (this.enabled === false) return;
         e.preventDefault();
         e.stopPropagation();
@@ -60,7 +59,7 @@ class FirstPersonControls {
 
     }
 
-    private onMouseMove(e: any) {
+    private onMouseMove = (e: any) => {
         if (this.enabled === false) return;
         e.preventDefault();
         e.stopPropagation();
@@ -79,7 +78,7 @@ class FirstPersonControls {
 
     }
 
-    private onMouseUp(e: any) {
+    private onMouseUp = (e: any) => {
         if (this.enabled === false) return;
         e.preventDefault();
         e.stopPropagation();
@@ -87,12 +86,19 @@ class FirstPersonControls {
         this.mouseDragOn = false;
     }
 
-    public addListener() {
-        //todo 添加鼠标事件监听
-        this.domElement.addEventListener("mousedown", this.onMouseDown.bind(this), false);
-        this.domElement.addEventListener("mousemove", this.onMouseMove.bind(this), false);
-        this.domElement.addEventListener("mouseup", this.onMouseUp.bind(this), false);
+    public addListener = () => {
+        this.domElement.addEventListener("mousedown", this.onMouseDown, false);
+        this.domElement.addEventListener("mousemove", this.onMouseMove, false);
+        this.domElement.addEventListener("mouseup", this.onMouseUp, false);
     }
+
+    public removeListener = () => {
+        this.domElement.removeEventListener("mousedown", this.onMouseDown, false);
+        this.domElement.removeEventListener("mousemove", this.onMouseMove, false);
+        this.domElement.removeEventListener("mouseup", this.onMouseUp, false);
+    }
+
+
 }
 
 export {

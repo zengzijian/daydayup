@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import {OrbitControls} from "./OrbitControls";
 
 class Create3d {
     public camera: THREE.Camera;
@@ -20,27 +19,27 @@ class Create3d {
         this.initCamera();
         this.initScene();
         this.initRenderer(bgColor, bgAlpha);
-        this.initControls();
+        // this.initControls();
 
         this.loopFn = [];
 
         this.loop();
     }
 
-    private getRect() {
+    private getRect = () => {
         this.rect = this.wrapDom.getBoundingClientRect();
     }
 
-    private initCamera() {
+    private initCamera = () => {
         let width = this.rect.width;
         let height = this.rect.height;
         this.camera = new THREE.PerspectiveCamera(60, width/height,1, 1000);
         this.camera.position.set(0, 0, 10);
     }
-    private initScene() {
+    private initScene = () => {
         this.scene = new THREE.Scene();
     }
-    private initRenderer(color: number, alpha: number){
+    private initRenderer = (color: number, alpha: number) => {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true
@@ -50,15 +49,14 @@ class Create3d {
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.wrapDom.appendChild(this.renderer.domElement);
     }
-    private initControls() {
-        this.controls = new OrbitControls(this.camera, this.wrapDom);
-    }
-    public render() {
+    // private initControls() {
+    //     this.controls = new OrbitControls(this.camera, this.wrapDom);
+    // }
+    public render = () => {
         this.renderer.render(this.scene, this.camera);
     }
-    private loop() {
-        let loop = this.loop.bind(this, arguments);
-        requestAnimationFrame(loop);
+    private loop = () => {
+        requestAnimationFrame(this.loop);
 
         if(this.loopFn.length > 0) {
             this.loopFn.forEach(function(fn) {

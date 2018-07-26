@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import {Create3d} from "./create3d";
-import {BaseObject} from "../model/baseObject";
-import {Vector3} from "../model/baseDataType";
 import {updateCurrentObj} from "../controller/updateCurrentObj";
 import {mainHtml} from "../view/mainHtml";
 import {updateCamera} from "../controller/updateCamera";
 import {FirstPersonControls} from "../controller/FirstPersonControls";
 import {ModelCamera} from "../model/modelCamera";
+import {OrbitControls} from "../controller/OrbitControls";
+import {OrbitControls1} from "../controller/OrbitControls1";
 
 let app3d: any;
 let render:Function;
@@ -31,7 +31,19 @@ function main3d() {
     dataModel.camera = new ModelCamera();
     dataModel.camera.spherical.setFromVector3(app3d.scene.position);
 
-    var personControls = new FirstPersonControls(app3d.camera, app3d.renderer.domElement);
+    // var personControls = new FirstPersonControls(app3d.camera, app3d.renderer.domElement);
+
+    // var orbitControls:any = new OrbitControls(app3d.camera, app3d.renderer.domElement);
+    // app3d.loopFn.push(function() {
+    //     orbitControls.update();
+    //     app3d.render();
+    // });
+    var orbitControls = new OrbitControls1(app3d.camera, app3d.renderer.domElement);
+    app3d.loopFn.push(function() {
+        orbitControls.update();
+        app3d.render();
+    });
+
 
     let girdHelper = new THREE.GridHelper(50, 50);
     app3d.scene.add(girdHelper);
