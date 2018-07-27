@@ -1,10 +1,5 @@
 import {Vector3,Spherical} from "./baseDataType";
 
-// let modelCamera = {
-//     position: new Vector3(),
-//     target: new Vector3(),
-// };
-
 class ModelCamera {
     public position: Vector3;
     public target: Vector3;

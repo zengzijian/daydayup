@@ -11,6 +11,7 @@ function updateCamera() {
         var ty = app3d.camera.position.y + radius * Math.cos(phi);
         var tz = app3d.camera.position.z + radius * Math.sin(theta) * Math.sin(phi);
 
+        app3d.camera.updateProjectionMatrix();
         var target = new THREE.Vector3(tx, ty, tz);
         app3d.camera.lookAt(target);
         app3d.render();
