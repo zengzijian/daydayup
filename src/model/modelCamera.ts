@@ -4,6 +4,7 @@ class ModelCamera {
     public position: Vector3;
     public target: Vector3;
     public spherical: Spherical;
+    public isFirstPerson: boolean;
     // protected _longitude: number;
     // public get longitude() {
     //     return this._longitude;
@@ -37,6 +38,7 @@ class ModelCamera {
         this.position = new Vector3();
         this.target = new Vector3();
         this.spherical = new Spherical();
+        this.isFirstPerson = false;
         // this._longitude = 0;
         // this._latitude = Math.PI / 2;
 

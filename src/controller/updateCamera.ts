@@ -5,18 +5,21 @@ import {ModelCamera} from "../model/modelCamera";
 
 function updateCamera() {
 
-    dataModel.camera.spherical.setAllFn = function(radius:number, phi:number, theta:number) {
+    // todo 根据不同的相机控制器，设置相机对应参数
+    // todo 在更新相机过程中，调整某些自适应物体的大小
 
-        var tx = app3d.camera.position.x + radius * Math.cos(theta) * Math.sin(phi);
-        var ty = app3d.camera.position.y + radius * Math.cos(phi);
-        var tz = app3d.camera.position.z + radius * Math.sin(theta) * Math.sin(phi);
-
-        app3d.camera.updateProjectionMatrix();
-        var target = new THREE.Vector3(tx, ty, tz);
-        app3d.camera.lookAt(target);
-        app3d.render();
-
-    }
+    // dataModel.camera.spherical.setAllFn = function(radius:number, phi:number, theta:number) {
+    //
+    //     var tx = app3d.camera.position.x + radius * Math.cos(theta) * Math.sin(phi);
+    //     var ty = app3d.camera.position.y + radius * Math.cos(phi);
+    //     var tz = app3d.camera.position.z + radius * Math.sin(theta) * Math.sin(phi);
+    //
+    //     app3d.camera.updateProjectionMatrix();
+    //     var target = new THREE.Vector3(tx, ty, tz);
+    //     app3d.camera.lookAt(target);
+    //     app3d.render();
+    //
+    // }
 
     // let inputCameraPosX = document.getElementById("input_cameraPosX");
     // modelCamera.position.xFn = function(val) {
