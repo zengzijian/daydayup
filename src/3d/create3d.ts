@@ -1,4 +1,8 @@
 import * as THREE from "three";
+import "../lib/PostProcessing";
+import "../lib/FXAAShader";
+import "../lib/OutlinePass";
+import "../lib/SSAARenderPass";
 
 class Create3d {
     public camera: THREE.Camera;
@@ -7,18 +11,27 @@ class Create3d {
     public rect: any;
     public wrapDom: any;
     public controls: any;
+    public composer: THREE.EffectComposer;
+    private effectFXAA: THREE.ShaderPass;
+    public outlinePass: THREE.OutlinePass;
+    public clock: THREE.Clock;
+    private clearColor: number;
+    private clearAlpha: number;
     public loopFn: Array<Function>;
 
     constructor(params:any) {
         let domId = params.domId !== undefined ? params.domId : "area3d";
-        let bgColor = params.bgColor !== undefined ? params.bgColor : 0xdddddd;
-        let bgAlpha = params.bgAlpha !== undefined ? params.bgAlpha : 1;
+        this.clearColor = params.bgColor !== undefined ? params.bgColor : 0xdddddd;
+        this.clearAlpha = params.bgAlpha !== undefined ? params.bgAlpha : 1;
+
         this.wrapDom = document.getElementById(domId);
 
         this.getRect();
         this.initCamera();
         this.initScene();
-        this.initRenderer(bgColor, bgAlpha);
+        this.initRenderer();
+        this.initClock();
+        this.initComposer();
         // this.initControls();
 
         this.loopFn = [];
@@ -30,6 +43,7 @@ class Create3d {
         this.rect = this.wrapDom.getBoundingClientRect();
     }
 
+
     private initCamera = () => {
         let width = this.rect.width;
         let height = this.rect.height;
@@ -39,21 +53,71 @@ class Create3d {
     private initScene = () => {
         this.scene = new THREE.Scene();
     }
-    private initRenderer = (color: number, alpha: number) => {
+    private initRenderer = () => {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true
         });
-        this.renderer.setClearColor(color, alpha);
+        this.renderer.setClearColor(this.clearColor, this.clearAlpha);
         this.renderer.setSize(this.rect.width, this.rect.height);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.wrapDom.appendChild(this.renderer.domElement);
+    }
+    private initComposer = () => {
+        this.composer = new THREE.EffectComposer(this.renderer);
+
+        var ssaaRenderPass = new THREE.SSAARenderPass(this.scene, this.camera);
+        ssaaRenderPass.unbiased = false;
+        ssaaRenderPass.sampleLevel = 2;
+        ssaaRenderPass.clearColor = this.clearColor;
+        ssaaRenderPass.clearAlpha = this.clearAlpha;
+        this.composer.addPass(ssaaRenderPass);
+
+        // var renderPass = new THREE.RenderPass(this.scene, this.camera);
+        // // renderPass.renderToScreen = true;
+        // this.composer.addPass(renderPass);
+
+        this.outlinePass = new THREE.OutlinePass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            this.scene,
+            this.camera
+        );
+        this.outlinePass.visibleEdgeColor.set(0xffff00);
+        this.outlinePass.hiddenEdgeColor.set(0xffff00);
+        this.outlinePass.edgeThickness = 3;
+        this.outlinePass.edgeStrength = 10;
+        this.outlinePass.pulsePeriod = 0;
+        this.composer.addPass(this.outlinePass);
+
+        var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
+        effectCopy.renderToScreen = true;
+        this.composer.addPass(effectCopy);
+
+    }
+    public addOutlineObject = (obj:THREE.Object3D) => {
+        this.outlinePass.selectedObjects = [];
+        this.outlinePass.selectedObjects.push(obj);
+    }
+    public clearOutline = () => {
+        this.outlinePass.selectedObjects = [];
+    }
+    // public addEffectFXAA = () => {
+    //     this.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+    //     this.effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+    //     this.effectFXAA.renderToScreen = true;
+    //     this.composer.addPass(this.effectFXAA);
+    // }
+    private initClock = () => {
+        this.clock = new THREE.Clock();
     }
     // private initControls() {
     //     this.controls = new OrbitControls(this.camera, this.wrapDom);
     // }
     public render = () => {
         this.renderer.render(this.scene, this.camera);
+    }
+    public composerRender = (delta: any) => {
+        this.composer.render(delta);
     }
     private loop = () => {
         requestAnimationFrame(this.loop);

@@ -152,7 +152,7 @@ export class OrbitControls {
             // 重置scale属性？
             this.scale = 1;
 
-            app3d.render();
+            app3d.composerRender();
 
             return false;
 
