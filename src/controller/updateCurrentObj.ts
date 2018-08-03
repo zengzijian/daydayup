@@ -16,7 +16,7 @@ function updateCurrentObj() {
     modelCurrentObj.position.xFn = function(val) {
         app3d.currentObj.position.x = val;
         inputCurrentObjPosX.setAttribute("value", String(val));
-        app3d.composerRender();
+        // app3d.composerRender();
     }
     inputCurrentObjPosX.oninput = function(e:any) {
         modelCurrentObj.position.x = Number(e.target.value);
@@ -26,7 +26,7 @@ function updateCurrentObj() {
     modelCurrentObj.position.yFn = function(val) {
         app3d.currentObj.position.y = val;
         inputCurrentObjPosY.setAttribute("value", String(val));
-        app3d.composerRender();
+        // app3d.composerRender();
     }
     inputCurrentObjPosY.oninput = function(e:any) {
         modelCurrentObj.position.y = Number(e.target.value);
@@ -36,11 +36,13 @@ function updateCurrentObj() {
     modelCurrentObj.position.zFn = function(val) {
         app3d.currentObj.position.z = val;
         inputCurrentObjPosZ.setAttribute("value", String(val));
-        app3d.composerRender();
+        // app3d.composerRender();
     }
     inputCurrentObjPosZ.oninput = function(e:any) {
         modelCurrentObj.position.z = Number(e.target.value);
     }
+
+
 
 }
 

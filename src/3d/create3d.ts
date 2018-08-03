@@ -4,6 +4,8 @@ import "../lib/FXAAShader";
 import "../lib/OutlinePass";
 import "../lib/SSAARenderPass";
 
+let asyncArr:Array<Function> = [];
+
 class Create3d {
     public camera: THREE.Camera;
     public renderer: THREE.WebGLRenderer;
@@ -12,7 +14,6 @@ class Create3d {
     public wrapDom: any;
     public controls: any;
     public composer: THREE.EffectComposer;
-    private effectFXAA: THREE.ShaderPass;
     public outlinePass: THREE.OutlinePass;
     public clock: THREE.Clock;
     private clearColor: number;
@@ -21,7 +22,7 @@ class Create3d {
 
     constructor(params:any) {
         let domId = params.domId !== undefined ? params.domId : "area3d";
-        this.clearColor = params.bgColor !== undefined ? params.bgColor : 0xdddddd;
+        this.clearColor = params.bgColor !== undefined ? params.bgColor : 0x000000;
         this.clearAlpha = params.bgAlpha !== undefined ? params.bgAlpha : 1;
 
         this.wrapDom = document.getElementById(domId);
@@ -73,10 +74,6 @@ class Create3d {
         ssaaRenderPass.clearAlpha = this.clearAlpha;
         this.composer.addPass(ssaaRenderPass);
 
-        // var renderPass = new THREE.RenderPass(this.scene, this.camera);
-        // // renderPass.renderToScreen = true;
-        // this.composer.addPass(renderPass);
-
         this.outlinePass = new THREE.OutlinePass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
             this.scene,
@@ -101,12 +98,6 @@ class Create3d {
     public clearOutline = () => {
         this.outlinePass.selectedObjects = [];
     }
-    // public addEffectFXAA = () => {
-    //     this.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
-    //     this.effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-    //     this.effectFXAA.renderToScreen = true;
-    //     this.composer.addPass(this.effectFXAA);
-    // }
     private initClock = () => {
         this.clock = new THREE.Clock();
     }
@@ -122,11 +113,21 @@ class Create3d {
     private loop = () => {
         requestAnimationFrame(this.loop);
 
-        if(this.loopFn.length > 0) {
-            this.loopFn.forEach(function(fn) {
+        // if(this.loopFn.length > 0) {
+        //     this.loopFn.forEach(function(fn) {
+        //         fn();
+        //     });
+        // }
+        if(asyncArr.length > 0) {
+            console.log("进入loop循环");
+            console.log(asyncArr);
+            asyncArr.push(this.composerRender);
+            asyncArr.forEach(function(fn) {
                 fn();
             });
+            asyncArr = [];
         }
+
     }
 
 
@@ -134,4 +135,4 @@ class Create3d {
 
 }
 
-export {Create3d};
+export {Create3d, asyncArr};

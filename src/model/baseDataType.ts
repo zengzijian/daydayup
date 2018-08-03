@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {asyncArr} from "../3d/create3d";
 
 class Vector3 extends THREE.Vector3{
     protected _x:number;
@@ -6,24 +7,39 @@ class Vector3 extends THREE.Vector3{
         return this._x;
     }
     public set x(val:number) {
-        this._x = val;
-        this.xFn(this._x);
+        if(this._x !== val) {
+            this._x = val;
+            var xFn = this.xFn.bind(this, this._x);
+            console.log("xFn");
+            asyncArr.push(xFn);
+        }
+        // this.xFn(this._x);
+        // var xFn = this.xFn.bind(this, this._x);
+        // asyncArr.push(xFn);
     }
     protected _y:number;
     public get y() {
         return this._y;
     }
     public set y(val:number) {
-        this._y = val;
-        this.yFn(this._y);
+        if(this._y !== val) {
+            this._y = val;
+            var yFn = this.yFn.bind(this, this._y);
+            console.log("yFn");
+            asyncArr.push(yFn);
+        }
     }
     protected _z:number;
     public get z() {
         return this._z;
     }
     public set z(val:number) {
-        this._z = val;
-        this.zFn(this._z);
+        if(this._z !== val) {
+            this._z = val;
+            var zFn = this.zFn.bind(this, this._z);
+            console.log("zFn");
+            asyncArr.push(zFn);
+        }
     }
     constructor(x=0, y=0, z=0) {
         super();

@@ -116,19 +116,23 @@
 	} );
 	var REVISION = '92'; // 当前three版本
 	var MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 }; // 枚举鼠标事件，event.button的值，左键为0，中键为1，右键为2
-	// 剔除face的四种模式，用于WebGLRenderer的setFaceCulling方法
+	// 剔除face的四种模式，用于WebGLRenderer的setFaceCulling()方法
 	var CullFaceNone = 0; // 禁止剔除面
 	var CullFaceBack = 1; // 将背面剔除（默认）
 	var CullFaceFront = 2; // 将整面剔除
 	var CullFaceFrontBack = 3; // 将正反两面都剔除
-	var FrontFaceDirectionCW = 0;
-	var FrontFaceDirectionCCW = 1;
-	var BasicShadowMap = 0;
-	var PCFShadowMap = 1;
-	var PCFSoftShadowMap = 2;
-	var FrontSide = 0;
-	var BackSide = 1;
-	var DoubleSide = 2;
+	// 设置正面的方向：WebGLRenderer.setFaceCulling()方法
+	var FrontFaceDirectionCW = 0; // 设置为顺时针多边形的缠绕顺序 clockwise
+	var FrontFaceDirectionCCW = 1; // 设置为逆时针多边形的缠绕顺序，counter-clockwise
+	// 设置阴影类型，用于WebGLRenderer.shadowMap.type属性
+	var BasicShadowMap = 0; // 提供为经过滤处理的阴影地图，速度最快，但质量最低
+	var PCFShadowMap = 1; // 使用百分比逼近滤波PCF（Percentage-Closer Filtering）算法过滤阴影映射，默认！
+	var PCFSoftShadowMap = 2; // 使用百分比逼近软阴影PCSS（Percentage-Closer Soft Shadows）算法过滤阴影映射
+	// 渲染材质的哪一面
+	var FrontSide = 0; // 正面
+	var BackSide = 1; // 背面
+	var DoubleSide = 2; // 双面
+	// 
 	var FlatShading = 1;
 	var SmoothShading = 2;
 	var NoColors = 0;
