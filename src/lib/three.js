@@ -265,6 +265,7 @@
 	var _Math = {
 		DEG2RAD: Math.PI / 180,
 		RAD2DEG: 180 / Math.PI,
+		// 生成随机的uuid
 		generateUUID: ( function () {
 			// http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/21963136#21963136
 			var lut = [];
@@ -321,11 +322,14 @@
 			return x * x * x * ( x * ( x * 6 - 15 ) + 10 );
 		},
 		// Random integer from <low, high> interval
-		// Math.floor向下取整，获取整数low和high之间的整数
+		// Math.floor()向下取整, Math.ceil()向上取整。
+		// 若low和high为整数，则获取该区间中的随机整数
+		// 若low为小数，则结果与low值之差为整数
 		randInt: function ( low, high ) {
 			return low + Math.floor( Math.random() * ( high - low + 1 ) );
 		},
 		// Random float from <low, high> interval
+		// 获取[low, high)之间的随机小数
 		randFloat: function ( low, high ) {
 			return low + Math.random() * ( high - low );
 		},
@@ -342,12 +346,16 @@
 		radToDeg: function ( radians ) {
 			return radians * _Math.RAD2DEG;
 		},
+		// & 按位与。 0&0=0，1&1=1，0&1=0，1&0=0
+		// 如果是n的2次幂，则返回true
 		isPowerOfTwo: function ( value ) {
 			return ( value & ( value - 1 ) ) === 0 && value !== 0;
 		},
+		// 返回大于等于value的2的最小次幂
 		ceilPowerOfTwo: function ( value ) {
 			return Math.pow( 2, Math.ceil( Math.log( value ) / Math.LN2 ) );
 		},
+		// 返回小于等于value的2的最大次幂
 		floorPowerOfTwo: function ( value ) {
 			return Math.pow( 2, Math.floor( Math.log( value ) / Math.LN2 ) );
 		}
@@ -358,10 +366,13 @@
 	 * @author egraether / http://egraether.com/
 	 * @author zz85 / http://www.lab4games.net/zz85/blog
 	 */
+	// 二维矢量构造函数
 	function Vector2( x, y ) {
 		this.x = x || 0;
 		this.y = y || 0;
 	}
+	// Object.defineProperties(obj, props)直接在一个对象上定义新的属性或修改现有属性，并返回该对象
+	// 二维矢量的xy属性，可以理解为width和height
 	Object.defineProperties( Vector2.prototype, {
 		"width": {
 			get: function () {
@@ -381,17 +392,21 @@
 		}
 	} );
 	Object.assign( Vector2.prototype, {
+		// 二维矢量的标识
 		isVector2: true,
+		// 一次性设置x，y属性，返回自身可链式调用
 		set: function ( x, y ) {
 			this.x = x;
 			this.y = y;
 			return this;
 		},
+		// 设置x，y的值为相同的一个标量
 		setScalar: function ( scalar ) {
 			this.x = scalar;
 			this.y = scalar;
 			return this;
 		},
+		// 单独设置x ，y
 		setX: function ( x ) {
 			this.x = x;
 			return this;
@@ -400,6 +415,7 @@
 			this.y = y;
 			return this;
 		},
+		// 根据索引设置x，y的值
 		setComponent: function ( index, value ) {
 			switch ( index ) {
 				case 0: this.x = value; break;
@@ -408,6 +424,7 @@
 			}
 			return this;
 		},
+		// 根据索引获取x，y的值
 		getComponent: function ( index ) {
 			switch ( index ) {
 				case 0: return this.x;
@@ -415,14 +432,17 @@
 				default: throw new Error( 'index is out of range: ' + index );
 			}
 		},
+		// 重新实例化一个x和y值跟该二维矢量相等的新矢量
 		clone: function () {
 			return new this.constructor( this.x, this.y );
 		},
+		// 将当前矢量的x，y值设置成另一个二维矢量的x和y值
 		copy: function ( v ) {
 			this.x = v.x;
 			this.y = v.y;
 			return this;
 		},
+		// 当前矢量跟另一个二维矢量相加
 		add: function ( v, w ) {
 			if ( w !== undefined ) {
 				console.warn( 'THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
@@ -432,21 +452,25 @@
 			this.y += v.y;
 			return this;
 		},
+		// x和y值都增加一个相同的标量
 		addScalar: function ( s ) {
 			this.x += s;
 			this.y += s;
 			return this;
 		},
+		// 当前矢量的x，y值分别设置为矢量a跟矢量b对应x，y的和
 		addVectors: function ( a, b ) {
 			this.x = a.x + b.x;
 			this.y = a.y + b.y;
 			return this;
 		},
+		// 一个二维矢量向乘以一个标量，再跟当前矢量相加
 		addScaledVector: function ( v, s ) {
 			this.x += v.x * s;
 			this.y += v.y * s;
 			return this;
 		},
+		// 当前矢量减去一个二维矢量
 		sub: function ( v, w ) {
 			if ( w !== undefined ) {
 				console.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
@@ -456,34 +480,47 @@
 			this.y -= v.y;
 			return this;
 		},
+		// 当前矢量x和y都减去一个相同的标量
 		subScalar: function ( s ) {
 			this.x -= s;
 			this.y -= s;
 			return this;
 		},
+		// 将当前矢量设置为矢量a跟矢量b的矢量差
 		subVectors: function ( a, b ) {
 			this.x = a.x - b.x;
 			this.y = a.y - b.y;
 			return this;
 		},
+		// 矢量x和y分别乘以另一个矢量的x和y
 		multiply: function ( v ) {
 			this.x *= v.x;
 			this.y *= v.y;
 			return this;
 		},
+		// 矢量x和y值乘以一个相同的标量
 		multiplyScalar: function ( scalar ) {
 			this.x *= scalar;
 			this.y *= scalar;
 			return this;
 		},
+		// 矢量x和y分别除以另一个矢量的x和y
 		divide: function ( v ) {
 			this.x /= v.x;
 			this.y /= v.y;
 			return this;
 		},
+		// 矢量x和y值除以一个相同的标量
 		divideScalar: function ( scalar ) {
 			return this.multiplyScalar( 1 / scalar );
 		},
+		/*
+		*  左乘一个三维矩阵，获得一组新的x，y的值
+		*  3x3的矩阵，是按列主序的
+		*  |  0 3 6  | | x |   | x'|
+		*  |  1 4 7  | | y | = | y'|
+		*  |  2 5 8  | | 1 |   | 1 |
+		**/
 		applyMatrix3: function ( m ) {
 			var x = this.x, y = this.y;
 			var e = m.elements;
@@ -491,22 +528,26 @@
 			this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ];
 			return this;
 		},
+		// 将x，y值设置为当前矢量和另一个矢量v的x，y中的最小值
 		min: function ( v ) {
 			this.x = Math.min( this.x, v.x );
 			this.y = Math.min( this.y, v.y );
 			return this;
 		},
+		// 将x，y值设置为当前矢量和另一个矢量v的x，y中的最大值
 		max: function ( v ) {
 			this.x = Math.max( this.x, v.x );
 			this.y = Math.max( this.y, v.y );
 			return this;
 		},
+		// 将x夹紧在[min.x, max.x]之间，将y夹紧在[min.y, max.y]之间
 		clamp: function ( min, max ) {
 			// assumes min < max, componentwise
 			this.x = Math.max( min.x, Math.min( max.x, this.x ) );
 			this.y = Math.max( min.y, Math.min( max.y, this.y ) );
 			return this;
 		},
+		// 矢量min的x，y值均为标量minVal，矢量max的x，y值均为标量maxVal，将当前矢量夹紧在min和max之间
 		clampScalar: function () {
 			var min = new Vector2();
 			var max = new Vector2();
@@ -516,86 +557,107 @@
 				return this.clamp( min, max );
 			};
 		}(),
+		// 将向量的长度夹紧在[min, max]区间
 		clampLength: function ( min, max ) {
 			var length = this.length();
 			return this.divideScalar( length || 1 ).multiplyScalar( Math.max( min, Math.min( max, length ) ) );
 		},
+		// 将x，y值向下取整
 		floor: function () {
 			this.x = Math.floor( this.x );
 			this.y = Math.floor( this.y );
 			return this;
 		},
+		// 将x，y值向上取整
 		ceil: function () {
 			this.x = Math.ceil( this.x );
 			this.y = Math.ceil( this.y );
 			return this;
 		},
+		// 将x，y值四舍五入取整
 		round: function () {
 			this.x = Math.round( this.x );
 			this.y = Math.round( this.y );
 			return this;
 		},
+		// 如果x，y值小于0，则采用向上取整；如果值大于等于0，则采用向下取整。让x，y值趋于0
 		roundToZero: function () {
 			this.x = ( this.x < 0 ) ? Math.ceil( this.x ) : Math.floor( this.x );
 			this.y = ( this.y < 0 ) ? Math.ceil( this.y ) : Math.floor( this.y );
 			return this;
 		},
+		// 将该矢量反向
 		negate: function () {
 			this.x = - this.x;
 			this.y = - this.y;
 			return this;
 		},
+		// 返回当前矢量与另一个矢量v的点积
 		dot: function ( v ) {
 			return this.x * v.x + this.y * v.y;
 		},
+		// 返回当前矢量长度的平方值
 		lengthSq: function () {
 			return this.x * this.x + this.y * this.y;
 		},
+		// 返回当前矢量的长度
 		length: function () {
 			return Math.sqrt( this.x * this.x + this.y * this.y );
 		},
+		// 曼哈顿距离（又称出租车几何），用以标明两个点在标准坐标系上的绝对轴距总和，返回 |x| + |y|
 		manhattanLength: function () {
 			return Math.abs( this.x ) + Math.abs( this.y );
 		},
+		// 变为单位二维矢量 
 		normalize: function () {
 			return this.divideScalar( this.length() || 1 );
 		},
+		// 返回当前向量与x轴正向形成的夹角 arctan(y/x)
 		angle: function () {
 			// computes the angle in radians with respect to the positive x-axis
 			var angle = Math.atan2( this.y, this.x );
 			if ( angle < 0 ) angle += 2 * Math.PI;
 			return angle;
 		},
+		// 当前矢量与另一个矢量v的距离
 		distanceTo: function ( v ) {
 			return Math.sqrt( this.distanceToSquared( v ) );
 		},
+		// 当前矢量与另一个矢量v的距离的平方
 		distanceToSquared: function ( v ) {
 			var dx = this.x - v.x, dy = this.y - v.y;
 			return dx * dx + dy * dy;
 		},
+		// 当前矢量与另一个矢量v的矢量差的曼哈顿距离
 		manhattanDistanceTo: function ( v ) {
 			return Math.abs( this.x - v.x ) + Math.abs( this.y - v.y );
 		},
+		// 设置矢量的长度
 		setLength: function ( length ) {
 			return this.normalize().multiplyScalar( length );
 		},
+		// 当前向量和v之间的线性差值，alpha取值[0, 1]，当alpha=0时，值为当前向量；当alpha=1时，值为向量v
 		lerp: function ( v, alpha ) {
 			this.x += ( v.x - this.x ) * alpha;
 			this.y += ( v.y - this.y ) * alpha;
 			return this;
 		},
+		// 将这个向量设为v1和v2之间的向量线性插值，其中alpha是沿着连接两个向量的直线的距离，alpha=0，为v1；alpha=1，为v2
 		lerpVectors: function ( v1, v2, alpha ) {
 			return this.subVectors( v2, v1 ).multiplyScalar( alpha ).add( v1 );
 		},
+		// 判断两个向量是否相等
 		equals: function ( v ) {
 			return ( ( v.x === this.x ) && ( v.y === this.y ) );
 		},
+		// 从一个数组中的2个相邻数字给向量赋值
 		fromArray: function ( array, offset ) {
 			if ( offset === undefined ) offset = 0;
 			this.x = array[ offset ];
 			this.y = array[ offset + 1 ];
 			return this;
 		},
+		// 将向量的x，y值保存到数组中
 		toArray: function ( array, offset ) {
 			if ( array === undefined ) array = [];
 			if ( offset === undefined ) offset = 0;
@@ -603,6 +665,7 @@
 			array[ offset + 1 ] = this.y;
 			return array;
 		},
+		// 从缓冲区的属性中获取x，y赋值给向量
 		fromBufferAttribute: function ( attribute, index, offset ) {
 			if ( offset !== undefined ) {
 				console.warn( 'THREE.Vector2: offset has been removed from .fromBufferAttribute().' );
@@ -611,6 +674,7 @@
 			this.y = attribute.getY( index );
 			return this;
 		},
+		// 将向量绕某一个二维坐标旋转angle角度
 		rotateAround: function ( center, angle ) {
 			var c = Math.cos( angle ), s = Math.sin( angle );
 			var x = this.x - center.x;
