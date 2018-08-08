@@ -284,29 +284,36 @@
 				return uuid.toUpperCase();
 			};
 		} )(),
+        // 把值锁定在[min, max]区间
 		clamp: function ( value, min, max ) {
 			return Math.max( min, Math.min( max, value ) );
 		},
 		// compute euclidian modulo of m % n
 		// https://en.wikipedia.org/wiki/Modulo_operation
+		// 返回 n mod m，不是 m % n
 		euclideanModulo: function ( n, m ) {
 			return ( ( n % m ) + m ) % m;
 		},
 		// Linear mapping from range <a1, a2> to range <b1, b2>
+		// (a1, b1)和(a2, b2)确定一条直线，在直线上取x，返回对应的y值
 		mapLinear: function ( x, a1, a2, b1, b2 ) {
 			return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
 		},
 		// https://en.wikipedia.org/wiki/Linear_interpolation
+		// t取[0, 1]，根据t的值，获取x和y的插值
+		// 当 t=0，返回x； 当 t=1，返回y
 		lerp: function ( x, y, t ) {
 			return ( 1 - t ) * x + t * y;
 		},
 		// http://en.wikipedia.org/wiki/Smoothstep
+		// 类似s型的插值和夹紧函数
 		smoothstep: function ( x, min, max ) {
 			if ( x <= min ) return 0;
 			if ( x >= max ) return 1;
 			x = ( x - min ) / ( max - min );
 			return x * x * ( 3 - 2 * x );
 		},
+		// 更平滑的插值
 		smootherstep: function ( x, min, max ) {
 			if ( x <= min ) return 0;
 			if ( x >= max ) return 1;
@@ -314,6 +321,7 @@
 			return x * x * x * ( x * ( x * 6 - 15 ) + 10 );
 		},
 		// Random integer from <low, high> interval
+		// Math.floor向下取整，获取整数low和high之间的整数
 		randInt: function ( low, high ) {
 			return low + Math.floor( Math.random() * ( high - low + 1 ) );
 		},
@@ -322,12 +330,15 @@
 			return low + Math.random() * ( high - low );
 		},
 		// Random float from <-range/2, range/2> interval
+		// 获取 (-range/2, range/2] 范围的随机数
 		randFloatSpread: function ( range ) {
 			return range * ( 0.5 - Math.random() );
 		},
+		// 将角度转化成弧度
 		degToRad: function ( degrees ) {
 			return degrees * _Math.DEG2RAD;
 		},
+		// 将弧度转化成角度
 		radToDeg: function ( radians ) {
 			return radians * _Math.RAD2DEG;
 		},
