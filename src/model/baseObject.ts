@@ -1,4 +1,4 @@
-import {Vector3} from "./baseDataType";
+import {Vector3} from "./Vector3";
 
 export class BaseObject {
     public position: Vector3;

@@ -8,6 +8,7 @@ import {ModelCamera} from "../model/modelCamera";
 import {OrbitControls} from "../controller/OrbitControls";
 import {HandleHelper} from "./handleHelper";
 import {HandleController} from "../controller/HandleController";
+import {AsyncQueue} from "../core/AsyncQueue";
 
 let app3d: any;
 let render:Function;
@@ -37,9 +38,8 @@ function main3d() {
     // let personControls = new FirstPersonControls(app3d.camera, app3d.renderer.domElement);
 
     let orbitControls = new OrbitControls(app3d.camera, app3d.renderer.domElement);
-    app3d.loopFn.push(function() {
+    AsyncQueue.push(function() {
         orbitControls.update();
-        app3d.composerRender();
     });
 
     /**
@@ -80,11 +80,8 @@ function main3d() {
     updateCamera();
 
 
-    // app3d.initComposer();
-
     let handleController = new HandleController(app3d.camera, [mesh], app3d.wrapDom);
 
-    app3d.composerRender(app3d.clock.getDelta());
 }
 
 export {main3d, app3d, dataModel};

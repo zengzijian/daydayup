@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 function testFn1() {
     /**
      * test
@@ -41,6 +43,25 @@ function testFn1() {
         name: "111111",
         color: "red"
     });
+
+
+    // 随机生成uuid的算法
+    var lut = [];
+    for ( var i = 0; i < 256; i ++ ) {
+        lut[ i ] = ( i < 16 ? '0' : '' ) + ( i ).toString( 16 );
+    }
+    // console.log(lut);
+
+    console.log(THREE.Math.randFloat(12.5, 16));
+    console.log(THREE.Math.floorPowerOfTwo(10));
+
+    let v1 = new THREE.Vector2(2, 3);
+    let v2 = new THREE.Vector2(2, 0);
+    console.log(v2.width, v2.height);
+
+    v1.rotateAround(v2, Math.PI);
+    console.log(v1);
+
 }
 
 export {testFn1};

@@ -1,4 +1,5 @@
-import {Vector3,Spherical} from "./baseDataType";
+import {Spherical} from "./baseDataType";
+import {Vector3} from "./Vector3";
 
 class ModelCamera {
     public position: Vector3;

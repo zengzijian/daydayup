@@ -4,8 +4,6 @@ import "../lib/FXAAShader";
 import "../lib/OutlinePass";
 import "../lib/SSAARenderPass";
 
-let asyncArr:Array<Function> = [];
-
 class Create3d {
     public camera: THREE.Camera;
     public renderer: THREE.WebGLRenderer;
@@ -16,9 +14,9 @@ class Create3d {
     public composer: THREE.EffectComposer;
     public outlinePass: THREE.OutlinePass;
     public clock: THREE.Clock;
+    public enableComposer:boolean;
     private clearColor: number;
     private clearAlpha: number;
-    public loopFn: Array<Function>;
 
     constructor(params:any) {
         let domId = params.domId !== undefined ? params.domId : "area3d";
@@ -26,6 +24,7 @@ class Create3d {
         this.clearAlpha = params.bgAlpha !== undefined ? params.bgAlpha : 1;
 
         this.wrapDom = document.getElementById(domId);
+        this.enableComposer = true;
 
         this.getRect();
         this.initCamera();
@@ -35,9 +34,6 @@ class Create3d {
         this.initComposer();
         // this.initControls();
 
-        this.loopFn = [];
-
-        this.loop();
     }
 
     private getRect = () => {
@@ -107,32 +103,16 @@ class Create3d {
     public render = () => {
         this.renderer.render(this.scene, this.camera);
     }
-    public composerRender = (delta: any) => {
-        this.composer.render(delta);
+    public composerRender = () => {
+        this.composer.render(this.clock.getDelta());
     }
-    private loop = () => {
-        requestAnimationFrame(this.loop);
-
-        // if(this.loopFn.length > 0) {
-        //     this.loopFn.forEach(function(fn) {
-        //         fn();
-        //     });
-        // }
-        if(asyncArr.length > 0) {
-            console.log("进入loop循环");
-            console.log(asyncArr);
-            asyncArr.push(this.composerRender);
-            asyncArr.forEach(function(fn) {
-                fn();
-            });
-            asyncArr = [];
+    public activeRender = () => {
+        if(this.enableComposer) {
+            this.composerRender();
+        } else {
+            this.render();
         }
-
     }
-
-
-
-
 }
 
-export {Create3d, asyncArr};
+export {Create3d};
