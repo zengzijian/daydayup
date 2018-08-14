@@ -696,7 +696,9 @@
 	 * @author bhouston / http://clara.io
 	 * @author WestLangley / http://github.com/WestLangley
 	 */
+	 // 4x4矩阵的构造函数
 	function Matrix4() {
+		// 默认为单位阵
 		this.elements = [
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -708,7 +710,16 @@
 		}
 	}
 	Object.assign( Matrix4.prototype, {
+		// 矩阵的标识
 		isMatrix4: true,
+		/**
+		* 由于矩阵在webgl系统里默认是按列主序排列的，set传入的参数是行主序列，因此需要手动转换
+		* element的index排列           形参保存的位置
+		* | 0  4  8  12 |        | n11  n12  n13  n14 |
+		* | 1  5  9  13 |   ==>  | n21  n22  n23  n24 |
+		* | 2  6  10 14 |        | n31  n32  n33  n34 |
+		* | 3  7  11 15 |        | n41  n42  n43  n44 | 
+		*/
 		set: function ( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
 			var te = this.elements;
 			te[ 0 ] = n11; te[ 4 ] = n12; te[ 8 ] = n13; te[ 12 ] = n14;
@@ -717,6 +728,7 @@
 			te[ 3 ] = n41; te[ 7 ] = n42; te[ 11 ] = n43; te[ 15 ] = n44;
 			return this;
 		},
+		// 将矩阵重置为单位阵
 		identity: function () {
 			this.set(
 				1, 0, 0, 0,
@@ -726,9 +738,11 @@
 			);
 			return this;
 		},
+		// 返回一个数值相同的新的四维矩阵
 		clone: function () {
 			return new Matrix4().fromArray( this.elements );
 		},
+		// 将另一个四维矩阵的每一个值，复制到该矩阵对应的位置
 		copy: function ( m ) {
 			var te = this.elements;
 			var me = m.elements;
@@ -738,11 +752,18 @@
 			te[ 12 ] = me[ 12 ]; te[ 13 ] = me[ 13 ]; te[ 14 ] = me[ 14 ]; te[ 15 ] = me[ 15 ];
 			return this;
 		},
+		/**
+		* 复制平移矩阵的参数      
+		* | 1  0  0  tx | | x |     | x + tx |
+		* | 0  1  0  ty | | y |  =  | y + ty |
+		* | 0  0  1  tz | | z |     | z + tz |
+		* | 0  0  0  1  | | 1 |     |   1    |
+		*/
 		copyPosition: function ( m ) {
 			var te = this.elements, me = m.elements;
-			te[ 12 ] = me[ 12 ];
-			te[ 13 ] = me[ 13 ];
-			te[ 14 ] = me[ 14 ];
+			te[ 12 ] = me[ 12 ]; // tx
+			te[ 13 ] = me[ 13 ]; // ty
+			te[ 14 ] = me[ 14 ]; // tz
 			return this;
 		},
 		extractBasis: function ( xAxis, yAxis, zAxis ) {
@@ -1217,6 +1238,13 @@
 				return this;
 			};
 		}(),
+		/**
+		* 将矩阵设置为【透视】相机投影矩阵
+		* |  2n/(r-l)    0      (r+l)/(r-l)     0       |
+		* |    0      2n/(t-b)  (t+b)/(t-b)     0       |
+		* |    0         0     -(f+n)/(f-n)  -2fn/(f-n) |
+		* |    0         0          -1          0       |
+		*/
 		makePerspective: function ( left, right, top, bottom, near, far ) {
 			if ( far === undefined ) {
 				console.warn( 'THREE.Matrix4: .makePerspective() has been redefined and has a new signature. Please check the docs.' );
@@ -1234,6 +1262,13 @@
 			te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = - 1;	te[ 15 ] = 0;
 			return this;
 		},
+		/**
+		* 将矩阵设置为【正交】相机投影矩阵
+		* |  2/(r-l)     0        0      -(r+l)/(r-l) |
+		* |    0      2/(t-b)     0      -(t+b)/(t-b) |
+		* |    0         0     -2/(f-n)  -(f+n)/(f-n) |
+		* |    0         0        0            1      |
+		*/
 		makeOrthographic: function ( left, right, top, bottom, near, far ) {
 			var te = this.elements;
 			var w = 1.0 / ( right - left );
@@ -1248,6 +1283,7 @@
 			te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = 0;	te[ 15 ] = 1;
 			return this;
 		},
+		// 判断2个矩阵是否相等
 		equals: function ( matrix ) {
 			var te = this.elements;
 			var me = matrix.elements;
@@ -1256,6 +1292,7 @@
 			}
 			return true;
 		},
+		// 使用给定的列主序列array数组的数组，来设置矩阵的元素，可以设置array的偏移量offset
 		fromArray: function ( array, offset ) {
 			if ( offset === undefined ) offset = 0;
 			for ( var i = 0; i < 16; i ++ ) {
@@ -1263,6 +1300,7 @@
 			}
 			return this;
 		},
+		// 将此矩阵的元素写入到列主格式的数组中，可选择数组內的偏移量
 		toArray: function ( array, offset ) {
 			if ( array === undefined ) array = [];
 			if ( offset === undefined ) offset = 0;
