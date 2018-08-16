@@ -698,7 +698,7 @@
 	 */
 	 // 4x4矩阵的构造函数
 	function Matrix4() {
-		// 默认为单位阵
+		// 默认为单位阵，并且为列主列表
 		this.elements = [
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -766,12 +766,16 @@
 			te[ 14 ] = me[ 14 ]; // tz
 			return this;
 		},
+		// 提取给定三个轴向量上的基准？？？
+		// 在threejs文件中没有被调用
 		extractBasis: function ( xAxis, yAxis, zAxis ) {
 			xAxis.setFromMatrixColumn( this, 0 );
 			yAxis.setFromMatrixColumn( this, 1 );
 			zAxis.setFromMatrixColumn( this, 2 );
 			return this;
 		},
+		// 创建有三个提供的轴向量组成的基础矩阵？？？
+		// 在threejs文件中没有被调用
 		makeBasis: function ( xAxis, yAxis, zAxis ) {
 			this.set(
 				xAxis.x, yAxis.x, zAxis.x, 0,
@@ -781,6 +785,8 @@
 			);
 			return this;
 		},
+		// 提取给定矩阵m的旋转分量到该矩阵
+		// 在RectAreaLigth中矩阵运算用到
 		extractRotation: function () {
 			var v1 = new Vector3();
 			return function extractRotation( m ) {
@@ -801,6 +807,8 @@
 				return this;
 			};
 		}(),
+		// 设置该矩阵的旋转子矩阵为给定的欧拉角所确定的选择，矩阵的其余部分是单位矩阵，euler默认为“XYZ”
+		// 在threejs文件中没有被调用
 		makeRotationFromEuler: function ( euler ) {
 			if ( ! ( euler && euler.isEuler ) ) {
 				console.error( 'THREE.Matrix4: .makeRotationFromEuler() now expects a Euler rotation rather than a Vector3 and order.' );
@@ -888,6 +896,14 @@
 			te[ 15 ] = 1;
 			return this;
 		},
+		// 设置该矩阵的旋转子为给定的四元数q所确定的旋转，矩阵的其余部分是单位矩阵
+		// 四元数quaternion实例化默认值为{_x:0, _y: 0, _z: 0, _w:1}
+		/**
+		* | 1-(2y^2 + 2z^2)     2xy - 2zw        2xz + 2yw     0 |
+		* |    2xy + 2zw     1-(2x^2 + 2z^2)     2yz - 2xw     0 |
+		* |    2xz - 2yw        2yz + 2xw     1-(2x^2 + 2y^2)  0 |
+		* |        0               0                 0         1 |
+		*/
 		makeRotationFromQuaternion: function ( q ) {
 			var te = this.elements;
 			var x = q._x, y = q._y, z = q._z, w = q._w;
@@ -915,6 +931,7 @@
 			te[ 15 ] = 1;
 			return this;
 		},
+		// 构造一个旋转矩阵。从eye位置向center位置，使用up作为向上的方向，其中eye，target，up均为Vector3
 		lookAt: function () {
 			var x = new Vector3();
 			var y = new Vector3();
@@ -946,6 +963,7 @@
 				return this;
 			};
 		}(),
+		// 使用m右乘以（Post-multiplies）该矩阵
 		multiply: function ( m, n ) {
 			if ( n !== undefined ) {
 				console.warn( 'THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.' );
@@ -953,9 +971,11 @@
 			}
 			return this.multiplyMatrices( this, m );
 		},
+		// 使用m左乘以（Pre-multiplies）该矩阵
 		premultiply: function ( m ) {
 			return this.multiplyMatrices( m, this );
 		},
+		// 将矩阵设置为 a x b
 		multiplyMatrices: function ( a, b ) {
 			var ae = a.elements;
 			var be = b.elements;
@@ -968,6 +988,7 @@
 			var b21 = be[ 1 ], b22 = be[ 5 ], b23 = be[ 9 ], b24 = be[ 13 ];
 			var b31 = be[ 2 ], b32 = be[ 6 ], b33 = be[ 10 ], b34 = be[ 14 ];
 			var b41 = be[ 3 ], b42 = be[ 7 ], b43 = be[ 11 ], b44 = be[ 15 ];
+			// te[0] = ae[0] * be[0] + ae[4] * be[1] + ae[8] + be[2] + ae[12] * be[3]; 
 			te[ 0 ] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
 			te[ 4 ] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
 			te[ 8 ] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
@@ -986,6 +1007,7 @@
 			te[ 15 ] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
 			return this;
 		},
+		// 把矩阵中的每个元素乘以标量s
 		multiplyScalar: function ( s ) {
 			var te = this.elements;
 			te[ 0 ] *= s; te[ 4 ] *= s; te[ 8 ] *= s; te[ 12 ] *= s;
@@ -994,6 +1016,7 @@
 			te[ 3 ] *= s; te[ 7 ] *= s; te[ 11 ] *= s; te[ 15 ] *= s;
 			return this;
 		},
+		// 将
 		applyToBufferAttribute: function () {
 			var v1 = new Vector3();
 			return function applyToBufferAttribute( attribute ) {
@@ -1050,6 +1073,8 @@
 				)
 			);
 		},
+		// 矩阵转置:行元素和列元素互换
+		// (拓展：矩阵置换：置换矩阵是一个方形二进制矩阵，它在每行和每列中只有一个1，而在其他地方则为0)
 		transpose: function () {
 			var te = this.elements;
 			var tmp;
@@ -2063,6 +2088,7 @@
 			this.z = e[ 14 ];
 			return this;
 		},
+		// 
 		setFromMatrixScale: function ( m ) {
 			var sx = this.setFromMatrixColumn( m, 0 ).length();
 			var sy = this.setFromMatrixColumn( m, 1 ).length();
@@ -2072,12 +2098,21 @@
 			this.z = sz;
 			return this;
 		},
+		/** 
+		* 设置该向量的x、y、z等于由索引指定的矩阵的列值，index可取0，1，2，3
+		* element的index排列 
+		* | 0  4  8  12 |
+		* | 1  5  9  13 |
+		* | 2  6  10 14 |
+		* | 3  7  11 15 |
+		*/
 		setFromMatrixColumn: function ( m, index ) {
 			return this.fromArray( m.elements, index * 4 );
 		},
 		equals: function ( v ) {
 			return ( ( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) );
 		},
+		// 以一个[x,y,z]数组中的值来设置该向量，offset为数组起点偏移量
 		fromArray: function ( array, offset ) {
 			if ( offset === undefined ) offset = 0;
 			this.x = array[ offset ];
@@ -6306,15 +6341,17 @@
 	/**
 	 * @author mrdoob / http://mrdoob.com/
 	 */
+	 // 缓存属性BufferAttribute的构造函数，属于核心模块内容
+	 // 用于保存内置属性比如顶点位置、法向量和颜色等，也可以用于保存自定义属性
 	function BufferAttribute( array, itemSize, normalized ) {
 		if ( Array.isArray( array ) ) {
 			throw new TypeError( 'THREE.BufferAttribute: array should be a Typed Array.' );
 		}
 		this.name = '';
-		this.array = array;
-		this.itemSize = itemSize;
-		this.count = array !== undefined ? array.length / itemSize : 0;
-		this.normalized = normalized === true;
+		this.array = array; // 用来保存和这个属性关联的数据
+		this.itemSize = itemSize; // 给定缓存中和一个顶点关联的数组中数据的个数，如果是坐标、法向量，那itemSize为3
+		this.count = array !== undefined ? array.length / itemSize : 0; // 顶点个数
+		this.normalized = normalized === true; // 表示如何将相关的缓冲区中的数据映射到GLSL着色器中的代码的值，即是否正规化
 		this.dynamic = false;
 		this.updateRange = { offset: 0, count: - 1 };
 		this.version = 0;
