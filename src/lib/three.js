@@ -1016,7 +1016,7 @@
 			te[ 3 ] *= s; te[ 7 ] *= s; te[ 11 ] *= s; te[ 15 ] *= s;
 			return this;
 		},
-		// 将
+		// 将当前矩阵乘以缓冲区属性的每一个三维向量
 		applyToBufferAttribute: function () {
 			var v1 = new Vector3();
 			return function applyToBufferAttribute( attribute ) {
@@ -1030,6 +1030,8 @@
 				return attribute;
 			};
 		}(),
+		// 计算和返回该矩阵的行列式（矩阵M的行列式等于任意一行或者任意一列与其代数余子式乘积的和）
+		// D = |M| = detM
 		determinant: function () {
 			var te = this.elements;
 			var n11 = te[ 0 ], n12 = te[ 4 ], n13 = te[ 8 ], n14 = te[ 12 ];
@@ -1086,6 +1088,7 @@
 			tmp = te[ 11 ]; te[ 11 ] = te[ 14 ]; te[ 14 ] = tmp;
 			return this;
 		},
+		// 使用向量v来设置该矩阵的位置分量
 		setPosition: function ( v ) {
 			var te = this.elements;
 			te[ 12 ] = v.x;
@@ -1093,6 +1096,9 @@
 			te[ 14 ] = v.z;
 			return this;
 		},
+		// 将该矩阵设置为矩阵m的逆矩阵
+		// 并不是所有矩阵都有逆矩阵，没有逆矩阵的矩阵成为奇异矩阵。任何一个具有0行或者0列的矩阵都是奇异矩阵
+		// Gauss-Jordan算法：在矩阵右边拓展一个同阶的单位矩阵，对拓展的nx2n矩阵进行初等变换，直到其左边的nxn矩阵变成单位矩阵，这时右边的nxn矩阵就是矩阵M的逆矩阵
 		getInverse: function ( m, throwOnDegenerate ) {
 			// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
 			var te = this.elements,
@@ -1105,7 +1111,9 @@
 				t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
 				t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
 				t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+			// 计算矩阵m的行列式
 			var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+			// 如果m的行列式为0，则返回单位矩阵
 			if ( det === 0 ) {
 				var msg = "THREE.Matrix4: .getInverse() can't invert matrix, determinant is 0";
 				if ( throwOnDegenerate === true ) {
@@ -1134,6 +1142,7 @@
 			te[ 15 ] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
 			return this;
 		},
+		// 使用向量v乘以这个矩阵的【列】！
 		scale: function ( v ) {
 			var te = this.elements;
 			var x = v.x, y = v.y, z = v.z;
@@ -1143,6 +1152,14 @@
 			te[ 3 ] *= x; te[ 7 ] *= y; te[ 11 ] *= z;
 			return this;
 		},
+		/**
+		* 获取三个轴的最大缩放值
+		* 轴x  y  z        
+		* | 0  4  8  12 |  
+		* | 1  5  9  13 |  
+		* | 2  6  10 14 |  
+		* | 3  7  11 15 |  
+		*/
 		getMaxScaleOnAxis: function () {
 			var te = this.elements;
 			var scaleXSq = te[ 0 ] * te[ 0 ] + te[ 1 ] * te[ 1 ] + te[ 2 ] * te[ 2 ];
@@ -1150,6 +1167,7 @@
 			var scaleZSq = te[ 8 ] * te[ 8 ] + te[ 9 ] * te[ 9 ] + te[ 10 ] * te[ 10 ];
 			return Math.sqrt( Math.max( scaleXSq, scaleYSq, scaleZSq ) );
 		},
+		// 设置该矩阵为平移变换
 		makeTranslation: function ( x, y, z ) {
 			this.set(
 				1, 0, 0, x,
@@ -1159,6 +1177,7 @@
 			);
 			return this;
 		},
+		// 设置此矩阵为绕X轴旋转theta弧度的旋转变换
 		makeRotationX: function ( theta ) {
 			var c = Math.cos( theta ), s = Math.sin( theta );
 			this.set(
@@ -1169,6 +1188,7 @@
 			);
 			return this;
 		},
+		// 设置此矩阵为绕Y轴旋转theta弧度的旋转变换
 		makeRotationY: function ( theta ) {
 			var c = Math.cos( theta ), s = Math.sin( theta );
 			this.set(
@@ -1179,6 +1199,7 @@
 			);
 			return this;
 		},
+		// 设置此矩阵为绕Z轴旋转theta弧度的旋转变换
 		makeRotationZ: function ( theta ) {
 			var c = Math.cos( theta ), s = Math.sin( theta );
 			this.set(
@@ -1189,6 +1210,8 @@
 			);
 			return this;
 		},
+		// axis：被正规化的旋转轴
+		// 设置此矩阵为绕axis轴旋转theta弧度的旋转变换
 		makeRotationAxis: function ( axis, angle ) {
 			// Based on http://www.gamedev.net/reference/articles/article1199.asp
 			var c = Math.cos( angle );
@@ -1204,6 +1227,7 @@
 			);
 			 return this;
 		},
+		// 设置此矩阵为缩放变换
 		makeScale: function ( x, y, z ) {
 			this.set(
 				x, 0, 0, 0,
@@ -1213,6 +1237,9 @@
 			);
 			return this;
 		},
+		// shear剪切（剪切变换是什么意思？）
+		// x: 在x轴上剪切的数值
+		//（该方法在threejs文件中居然没有被调用过！）
 		makeShear: function ( x, y, z ) {
 			this.set(
 				1, y, z, 0,
@@ -1222,12 +1249,14 @@
 			);
 			return this;
 		},
+		// 设置这个矩阵为平移、四元数和缩放变换的组合变换
 		compose: function ( position, quaternion, scale ) {
 			this.makeRotationFromQuaternion( quaternion );
 			this.scale( scale );
 			this.setPosition( position );
 			return this;
 		},
+		// 将这个矩阵分解为平移，四元数和缩放分量
 		decompose: function () {
 			var vector = new Vector3();
 			var matrix = new Matrix4();
