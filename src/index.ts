@@ -5,6 +5,7 @@ import {main2d} from "./2d/main2d";
 
 import {testFn1} from "./test/test1";
 import {testFn2} from "./test/test2";
+import {testFn3} from "./test/test3";
 
 import {LOOP} from "./core/Loop";
 
@@ -14,6 +15,7 @@ import {LOOP} from "./core/Loop";
 
 // testFn1();
 
-testFn2();
+// testFn2();
+testFn3();
 
 LOOP();

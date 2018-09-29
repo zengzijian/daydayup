@@ -1,5 +1,5 @@
-class NewArray extends Array{
-    constructor(...args:any[]) {
+class NewArray extends Array {
+    constructor(...args: any[]) {
         super();
         let arr = Array.apply(null, args);
         arr.__proto__ = NewArray.prototype;
