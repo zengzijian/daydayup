@@ -1,13 +1,43 @@
 import {BaseValue} from "../model/BaseValue";
 import {AsyncList} from "../core/AsyncQueue1";
 import {Observer} from "../utils/Observer";
+import {NewArray} from "../model/NewArray";
+import {BaseData} from "../model/BaseValue1";
 
-import {BaseValue1} from "../model/BaseValue1";
+class ViewModel {
+    public data:any;
+    public updateModel:Array<Function>;
+    public updateView:Array<Function>;
+    constructor() {
+    }
+    public bindModel(child:BaseData) {
+        this.data = child;
+    }
+}
 
-class Vector3 extends BaseValue1 {
+let DOMEvent = {
+    ob: new Observer(),
+    eventType: ["mousedown", "mousemove", "mouseup", "click"],
+    listenEvent: function() {
+        for(let i in this.eventType) {
+            let type = this.eventType[i];
+            document.body.addEventListener(type, (event:any) => {
+                 this.ob.dispatchEvent(event);
+            })
+        }
+    }
+};
+// DOMEvent.listenEvent();
+// DOMEvent.ob.addListener("mousedown", (e:any)=> {
+//     console.log(e);
+//     console.log("触发了点击事件");
+// });
+
+class Vector3 extends BaseData {
     public x: number;
     public y: number;
     public z: number;
+    public enabled:boolean = false;
     constructor(x = 0, y = 0, z = 0) {
         super();
 
@@ -18,38 +48,101 @@ class Vector3 extends BaseValue1 {
         this._init();
     }
 }
-class BoxData {
+
+class Camera extends BaseData {
     public position:Vector3;
+    public enabled:boolean;
     constructor() {
+        super();
+
         this.position = new Vector3();
+        this.enabled = true;
 
-        // this.position.ob.addListener("x", () => {
-        //     // console.log('position.x' + this.position.x);
-        //     AsyncList.three.push(() => {
-        //         console.log('更新3d视图的position.x为' + this.position.x);
-        //     });
-        //
-        //     console.log(this.position.ob);
-        // });
-        //
-        // setTimeout(()=> {
-        //     console.log("position的属性被改变");
-        //     this.position.x = 10;
-        // }, 2000);
+        this._init();
     }
 }
 
-class TestBox {
-    public data:BoxData;
+class Container {
+    public arr:NewArray;
     constructor() {
-        this.data = new BoxData();
-
-        this.bindUpdateView();
+        this.arr = new NewArray();
     }
-    public bindUpdateView = () => {
-        console.log("绑定更新视图的方法");
+    public add(child:any) {
+        this.arr.push(child);
+    }
+    public remove(child:any) {
+        let index = this.arr.indexOf(child);
+        if(index > -1) {
+            this.arr.splice(index, 1);
+        }
     }
 }
+
+class TestBoxModel extends BaseData{
+    public position:Vector3;
+    public rotation:Vector3;
+    public scale: Vector3;
+    constructor() {
+        super();
+
+        this.position = new Vector3();
+        this.rotation = new Vector3();
+        this.scale = new Vector3(1, 1, 1);
+
+        this._init();
+    }
+}
+
+class TestBoxViewModel extends ViewModel{
+    constructor() {
+        super();
+
+        this.data = new TestBoxModel();
+    }
+}
+
+// class BoxData {
+//     public position:Vector3;
+//     constructor() {
+//         this.position = new Vector3();
+//
+//         // this.position.ob.addListener("x", () => {
+//         //     // console.log('position.x' + this.position.x);
+//         //     // AsyncList.three.push(() => {
+//         //     //     console.log('更新3d视图的position.x为' + this.position.x);
+//         //     // });
+//         //     //
+//         //     // console.log(this.position.ob);
+//         // });
+//         //
+//         // this.position.ob.addListener("enabled", () => {
+//         //     // console.log('position.x' + this.position.x);
+//         //     // AsyncList.three.push(() => {
+//         //     //     console.log('更新3d视图的position.x为' + this.position.x);
+//         //     // });
+//         //     //
+//         //     // console.log(this.position.ob);
+//         //     console.log("修改了enabled属性");
+//         // });
+//         //
+//         // setTimeout(()=> {
+//         //     this.position.x = 10;
+//         //     this.position.enabled = true;
+//         // }, 2000);
+//     }
+// }
+//
+// class TestBox {
+//     public data:BoxData;
+//     constructor() {
+//         this.data = new BoxData();
+//
+//         this.bindUpdateView();
+//     }
+//     public bindUpdateView = () => {
+//         console.log("绑定更新视图的方法");
+//     }
+// }
 
 class Data extends BaseValue {
     public posX: number;
@@ -115,4 +208,10 @@ class Box {
 }
 
 
-export {Box, TestBox};
+export {
+    Box,
+    TestBoxModel,
+    TestBoxViewModel,
+    Camera,
+    ViewModel
+};

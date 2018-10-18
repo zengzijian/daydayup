@@ -7,6 +7,8 @@ import {testFn1} from "./test/test1";
 import {testFn2} from "./test/test2";
 import {testFn3} from "./test/test3";
 
+import {test3d} from "./3d/test3d";
+
 import {LOOP} from "./core/Loop";
 
 // createDom();
@@ -15,7 +17,9 @@ import {LOOP} from "./core/Loop";
 
 // testFn1();
 
-// testFn2();
+testFn2();
 testFn3();
+
+test3d();
 
 LOOP();

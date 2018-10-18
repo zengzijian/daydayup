@@ -5,6 +5,9 @@ function testFn2() {
 
     let a = new NewArray(1, 1, 1, 1, "string");
     // let a = new NewArray(1, 2, 3);
+    (a as any).ob.addListener("push", () => {
+        console.log("监听了push操作");
+    });
     a.push(1, 2, 3, 4);
     console.log(a);
     // a.pop();

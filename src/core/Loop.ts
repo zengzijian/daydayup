@@ -1,6 +1,7 @@
 import {AsyncQueue} from "./AsyncQueue";
 import {app3d} from "../3d/main3d";
 import {AsyncList} from "./AsyncQueue1";
+import {render3d} from "../3d/test3d";
 
 function LOOP() {
     requestAnimationFrame(LOOP);
@@ -27,6 +28,8 @@ function LOOP() {
             case "three":
                 if(typeArr.length > 0 ) {
                     // todo push 3d render function
+                    typeArr.push(render3d);
+
                     runAllFn(typeArr);
                 }
                 break;

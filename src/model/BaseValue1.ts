@@ -1,7 +1,7 @@
 import {AsyncQueue} from "../core/AsyncQueue";
 import {Observer} from "../utils/Observer";
 
-class BaseValue1 {
+class BaseData {
     public ob: Observer;
     constructor() {
         this.ob = new Observer();
@@ -12,28 +12,32 @@ class BaseValue1 {
 
         arr.forEach((attr) => {
             let val = _self[attr];
-            Object.defineProperty(_self, attr, {
-                get: function() {
-                    return val;
-                },
-                set: function(newVal) {
-                    val = newVal;
+            // 对非引用类型值的监听
+            if(typeof val !== "function" && typeof val !== "object") {
+                Object.defineProperty(_self, attr, {
+                    get: function() {
+                        return val;
+                    },
+                    set: function(newVal) {
+                        val = newVal;
 
-                    console.log("调用了set");
+                        // console.log("调用了set");
 
-                    this.ob.dispatch(attr);
+                        this.ob.dispatch(attr);
 
-                    // let attrFn = (_self as any)[attr + "Fn"];
-                    //
-                    // if( attrFn && typeof attrFn === "function") {
-                    //     AsyncQueue.push(attrFn.bind(_self, val));
-                    // }
-                },
-                configurable: true,
-                enumerable: true
-            })
+                        // let attrFn = (_self as any)[attr + "Fn"];
+                        //
+                        // if( attrFn && typeof attrFn === "function") {
+                        //     AsyncQueue.push(attrFn.bind(_self, val));
+                        // }
+                    },
+                    configurable: true,
+                    enumerable: true
+                })
+            }
+
         });
     }
 }
 
-export {BaseValue1};
+export {BaseData};

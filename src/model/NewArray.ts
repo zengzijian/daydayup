@@ -1,7 +1,10 @@
+import {Observer} from "../utils/Observer";
+
 class NewArray extends Array {
     constructor(...args: any[]) {
         super();
         let arr = Array.apply(null, args);
+        arr.ob = new Observer();
         arr.__proto__ = NewArray.prototype;
         return arr;
     }
@@ -22,6 +25,9 @@ NewArray.prototype = arrayMethods;
 ].forEach(method => {
     (NewArray.prototype as any)[method] = function () {
         console.log("监听到数组变化");
+
+        this.ob.dispatch(method);
+
         return (Array.prototype as any)[method].apply(this, arguments);
     }
 });

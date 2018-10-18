@@ -1,3 +1,8 @@
+interface Event {
+    type: string,
+    target: any
+}
+
 class Observer {
     private listeners: any;
     constructor() {
@@ -33,6 +38,17 @@ class Observer {
             let array = listenerArray.slice(0);
             for(let i = 0; i < array.length; i++) {
                 array[i]();
+            }
+        }
+    }
+    public dispatchEvent = (event:Event) => {
+        let listeners = this.listeners;
+        let listenerArray = listeners[event.type];
+        if(listenerArray !== undefined) {
+            // event.target = this;
+            let array = listenerArray.slice(0);
+            for(let i = 0; i < array.length; i++) {
+                array[i].call(event.target, event);
             }
         }
     }
