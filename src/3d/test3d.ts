@@ -8,7 +8,7 @@ function test3d() {
     renderer = new THREE.WebGLRenderer({
         alpha: true
     });
-    renderer.setClearColor(0x333333);
+    renderer.setClearColor(0xdddddd);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(500, 500);
     document.body.appendChild(renderer.domElement);

@@ -31,13 +31,13 @@ class Observer {
             }
         }
     }
-    public dispatch = (type: string) => {
+    public dispatch = (type: string, val:any) => {
         let listeners = this.listeners;
         let listenerArray = listeners[type];
         if(listenerArray !== undefined) {
             let array = listenerArray.slice(0);
             for(let i = 0; i < array.length; i++) {
-                array[i]();
+                array[i].call();
             }
         }
     }

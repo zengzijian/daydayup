@@ -12,8 +12,9 @@ class BaseData {
 
         arr.forEach((attr) => {
             let val = _self[attr];
-            // 对非引用类型值的监听
-            if(typeof val !== "function" && typeof val !== "object") {
+            // 对非引用类型值的监听???
+            if(typeof val !== "function") {
+            // if(typeof val !== "function" && typeof val !== "object") {
                 Object.defineProperty(_self, attr, {
                     get: function() {
                         return val;
@@ -21,9 +22,7 @@ class BaseData {
                     set: function(newVal) {
                         val = newVal;
 
-                        // console.log("调用了set");
-
-                        this.ob.dispatch(attr);
+                        this.ob.dispatch(attr, val);
 
                         // let attrFn = (_self as any)[attr + "Fn"];
                         //

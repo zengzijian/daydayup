@@ -21,15 +21,17 @@ function LOOP() {
         switch(i) {
             case "dom":
             case "always":
+                // todo 好像始终渲染的线程，不需要将渲染队列重置
                 if(typeArr.length > 0) {
-                    runAllFn(typeArr);
+                    typeArr.forEach((fn:Function) => {
+                       fn();
+                    });
                 }
                 break;
             case "three":
                 if(typeArr.length > 0 ) {
                     // todo push 3d render function
                     typeArr.push(render3d);
-
                     runAllFn(typeArr);
                 }
                 break;

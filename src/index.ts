@@ -17,9 +17,9 @@ import {LOOP} from "./core/Loop";
 
 // testFn1();
 
-testFn2();
+// testFn2();
+test3d();
 testFn3();
 
-test3d();
 
 LOOP();

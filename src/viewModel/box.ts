@@ -3,15 +3,16 @@ import {AsyncList} from "../core/AsyncQueue1";
 import {Observer} from "../utils/Observer";
 import {NewArray} from "../model/NewArray";
 import {BaseData} from "../model/BaseValue1";
+import * as THREE from "three";
+import {render3d, scene} from "../3d/test3d";
+
+// 所有视图物体都有on, off属性，类似on("mousemove")  off("click")，开启或者取消对于事件的监听
 
 class ViewModel {
     public data:any;
     public updateModel:Array<Function>;
     public updateView:Array<Function>;
     constructor() {
-    }
-    public bindModel(child:BaseData) {
-        this.data = child;
     }
 }
 
@@ -37,7 +38,6 @@ class Vector3 extends BaseData {
     public x: number;
     public y: number;
     public z: number;
-    public enabled:boolean = false;
     constructor(x = 0, y = 0, z = 0) {
         super();
 
@@ -46,6 +46,11 @@ class Vector3 extends BaseData {
         this.z = z;
 
         this._init();
+    }
+    public set = (x: number, y: number, z: number) => {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 }
 
@@ -62,23 +67,7 @@ class Camera extends BaseData {
     }
 }
 
-class Container {
-    public arr:NewArray;
-    constructor() {
-        this.arr = new NewArray();
-    }
-    public add(child:any) {
-        this.arr.push(child);
-    }
-    public remove(child:any) {
-        let index = this.arr.indexOf(child);
-        if(index > -1) {
-            this.arr.splice(index, 1);
-        }
-    }
-}
-
-class TestBoxModel extends BaseData{
+ class TestBoxModel extends BaseData{
     public position:Vector3;
     public rotation:Vector3;
     public scale: Vector3;
@@ -93,11 +82,35 @@ class TestBoxModel extends BaseData{
     }
 }
 
-class TestBoxViewModel extends ViewModel{
+class TestBoxVM extends ViewModel{
+    public v3d:THREE.Mesh;
     constructor() {
         super();
 
         this.data = new TestBoxModel();
+
+        this.v3d = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1,1 ),
+            new THREE.MeshBasicMaterial({
+                color: 0x333300
+            })
+        );
+        scene.add(this.v3d);
+        render3d();
+        console.log(scene);
+
+        this.data.position.ob.addListener("x", (val:any) => {
+            this.v3d.position.x = val;
+        });
+        this.data.position.ob.addListener("y", function() {
+
+        });
+        this.data.position.ob.addListener("z", function() {
+
+        });
+    }
+    public draw3d = () => {
+
     }
 }
 
@@ -211,7 +224,8 @@ class Box {
 export {
     Box,
     TestBoxModel,
-    TestBoxViewModel,
+    TestBoxVM,
     Camera,
-    ViewModel
+    ViewModel,
+    Vector3
 };
