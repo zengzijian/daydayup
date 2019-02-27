@@ -31,7 +31,7 @@ class Observer {
             }
         }
     }
-    public dispatch = (type: string, val:any) => {
+    public dispatch = (type: string, val?:any) => {
         let listeners = this.listeners;
         let listenerArray = listeners[type];
         if(listenerArray !== undefined) {
