@@ -26,7 +26,13 @@ console.log("new life!");
  * *******************************
  */
 
-import {Template} from "./newLife/t1";
+import {Template, Vector2,Vector3} from "./newLife/t1";
+import {Stack} from "./newLife/data";
+
+let s1 = new Stack();
+s1.push(1);
+s1.push(2);
+s1.print();
 
 let num = 0;
 let t1 = new Template();
@@ -44,6 +50,10 @@ let btn = document.createElement("button");
 btn.innerHTML = t1.getData("testProp");
 document.body.appendChild(btn);
 
+let inputValue = new Vector2(1,2);
+
+let input1 = document.createElement("input");
+input1.type = "text";
 
 
 // 注册UI层的事件，修改对应model的数据
@@ -62,3 +72,29 @@ t1.addListener("testProp", ()=> {
 t1.addListener("testProp", () => {
    console.log(t1.getData("testProp"));
 });
+
+let v2 = new Vector2(2,2);
+
+let t2 = new Template();
+t2.addData("position", v2);
+let pos = t2.getData("position");
+console.log(pos);
+pos._x = 10;
+console.log(pos._x);
+// console.log(pos === v2);
+// console.log(v2.x);
+// console.log(pos._x);
+// pos.set(2,1);
+// console.log(pos.x, pos.y);
+// pos.x = 4;
+// console.log(pos.x, pos.y);
+// pos.y = 6;
+// console.log(pos.x, pos.y);
+// console.log(pos._x);
+
+
+//
+let v3 = new Vector3();
+
+// console.log(pos);
+
